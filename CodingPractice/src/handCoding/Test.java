@@ -1,40 +1,110 @@
 package handCoding;
 
 public class Test {
-	public static int fibonacci(int n){
-		if(n == 0){
-			return 0;
+	// sort
+	// mergesort
+	public static void mergesort(int[] arr, int left, int right){
+		if(left < right){
+			int mid = (left + right) / 2;
+			mergesort(arr, left, mid);
+			mergesort(arr, mid + 1, right);
+			merge(arr, left, mid, right);
 		}
-		else if(n == 1){
-			return 1;
+	}
+	public static void merge(int[] arr, int low, int mid, int high){
+		// helper배열에 현재 병합 할 메서드들을 복사해놔
+		int[] helper = new int[arr.length];
+		for(int i = low;i<=high;i++){
+			helper[i] = arr[i];
+		}
+		// 두 개의 배열에서 왼쪽 배열 첫 번째, 오른쪽 배열 첫 번째 
+		int helperleft = low;
+		int helperright = mid + 1;
+		int current = low;
+		
+		// 두 수를 완전히 arr에 몰아 넣기 전에
+		while(helperleft <= mid && helperright <= high){
+			// helper배열의 크기를 비교하여 작은 것을 넣는다. arr에 
+			if(helper[helperleft] <= helper[helperright]){
+				arr[current] = helper[helperleft];
+				helperleft++;
+			}
+			else{
+				arr[current] = helper[helperright];
+				helperright++;
+			}
+			current++;
+		}
+		// 남아있는 수들을 
+		int remaining = mid - helperleft;
+		for(int i = 0;i<=remaining;i++){
+			arr[current + i] = helper[helperleft + i];
+		}
+	}
+	// quicksort
+	public static void swap(int[] arr, int i, int j){
+		int temp = arr[i];
+		arr[i] = arr[j];
+		arr[j] = temp;
+	}
+	public static void quicksort(int[] arr, int left, int right){
+		int index = partition(arr, left, right);
+		
+		if(left < index - 1){
+			quicksort(arr, left, index - 1);
+			quicksort(arr, index, right);
+		}
+	}
+	public static int partition(int[] arr, int left, int right){
+		int pivot = arr[(left + right) / 2];
+		while(left <= right){
+			while(arr[left] < pivot){
+				left++;
+			}
+			while(arr[right] > pivot){
+				right--;
+			}
+			if(left <= right){
+				swap(arr, left, right);
+				left++;
+				right--;
+			}
+		}
+		return left;
+	}
+	
+	public static void print(int[] arr){
+		for(int i = 0;i<arr.length;i++){
+			System.out.print(arr[i] + " ");
+		}
+		System.out.println();
+	}
+	
+	public static int binarysearch(int[] arr, int left, int right, int target){
+		int mid = (left + right) / 2;
+		if(target < arr[mid]){
+			return binarysearch(arr, left, mid - 1, target);
+		}
+		else if(target > arr[mid]){
+			return binarysearch(arr, mid + 1, right, target);
 		}
 		else{
-			return fibonacci(n - 1) + fibonacci(n - 2);
+			return mid;
 		}
 	}
-	public static int dp_fibonacci(int n){
-		int[] fibo = new int[1000];
-		fibo[0] = 0;
-		fibo[1] = 1;
-		for(int i = 2;i<=n;i++){
-			fibo[i] = fibo[i - 2] + fibo[i - 1];
-		}
-		return fibo[n];
-	}
-	public static int dp_fibonacci(int n, int[] fibo){
-		if(n <= 1)
-			return n;
-		if(fibo[n] != 0)
-			return fibo[n];
-		else
-			return fibo[n] = dp_fibonacci(n - 2, fibo) + dp_fibonacci(n - 1, fibo);
-	}
+	
 	public static void main(String[] args) {
-		// System.out.println(fibonacci(100));
-		int result = dp_fibonacci(30);
-		System.out.println(result);
-		int[] fibo = new int[1000];
-		System.out.println(dp_fibonacci(30, fibo));
+		int[] arr = {5,4,3,2,1};
+		print(arr);
+		// mergesort(arr, 0, 4);
+		quicksort(arr, 0, 4);
+		print(arr);
+		System.out.println(binarysearch(arr, 0, 4, 2) + "번 째 인덱스");
+		System.out.println(binarysearch(arr, 0, 4, 1) + "번 째 인덱스");
+		System.out.println(binarysearch(arr, 0, 4, 3) + "번 째 인덱스");
+		System.out.println(binarysearch(arr, 0, 4, 4) + "번 째 인덱스");
+		System.out.println(binarysearch(arr, 0, 4, 5) + "번 째 인덱스");
+		
 	}
 
 }
